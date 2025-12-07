@@ -191,7 +191,7 @@ export function EmployeeChatPage({ user, onLogout }: EmployeeChatPageProps) {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-slate-900">
+    <div className="flex flex-col h-screen w-full bg-slate-900 overflow-x-hidden">
       {/* Header */}
       <div className="bg-slate-800 border-b border-purple-500/20 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -282,7 +282,7 @@ export function EmployeeChatPage({ user, onLogout }: EmployeeChatPageProps) {
 
       {/* Input */}
       <div className="bg-slate-800 border-t border-purple-500/20 p-4">
-        <div className="max-w-4xl mx-auto flex gap-3">
+        <div className="flex gap-3">
           <input
             type="text"
             value={input}
