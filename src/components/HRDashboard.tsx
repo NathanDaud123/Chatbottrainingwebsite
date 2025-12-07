@@ -21,20 +21,9 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
   const [newQuestion, setNewQuestion] = useState('');
   const [newAnswer, setNewAnswer] = useState('');
   const [loading, setLoading] = useState(false);
-  const [sidebarMinimized, setSidebarMinimized] = useState(window.innerWidth < 640);
+  const [sidebarMinimized, setSidebarMinimized] = useState(false);
   const [documentContent, setDocumentContent] = useState('');
   const [showDocumentModal, setShowDocumentModal] = useState(false);
-
-  // Auto-minimize sidebar on mobile
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setSidebarMinimized(true);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useEffect(() => {
     loadData();
@@ -216,165 +205,159 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
   };
 
   return (
-    <div className="flex h-screen w-full bg-slate-900 overflow-x-hidden">
-      {/* Sidebar - always visible, minimized on mobile by default */}
-      <div className={`${sidebarMinimized ? 'w-12 sm:w-16' : 'w-40 sm:w-52 lg:w-64'} flex bg-slate-800 border-r border-purple-500/20 flex-col transition-all duration-300 flex-shrink-0`}>
-        <div className="p-4 lg:p-6 border-b border-purple-500/20">
+    <div className="flex h-screen bg-slate-900">
+      {/* Sidebar */}
+      <div className={`${sidebarMinimized ? 'w-20' : 'w-64'} bg-slate-800 border-r border-purple-500/20 flex flex-col transition-all duration-300`}>
+        <div className="p-6 border-b border-purple-500/20">
           {!sidebarMinimized && (
             <>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="bg-gradient-to-r from-purple-600 to-cyan-500 p-1.5 lg:p-2 rounded-lg">
-                  <BarChart3 className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-gradient-to-r from-purple-600 to-cyan-500 p-2 rounded-lg">
+                  <BarChart3 className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-white text-sm lg:text-base">HR Dashboard</h2>
+                  <h2 className="text-white">HR Dashboard</h2>
                 </div>
               </div>
-              <div className="bg-gradient-to-r from-purple-900/50 to-cyan-900/50 rounded-lg p-2 lg:p-3 border border-purple-500/20">
-                <p className="text-white text-sm truncate">{user.name}</p>
-                <p className="text-purple-300 text-xs">Administrator</p>
+              <div className="bg-gradient-to-r from-purple-900/50 to-cyan-900/50 rounded-lg p-3 border border-purple-500/20">
+                <p className="text-white">{user.name}</p>
+                <p className="text-purple-300">Administrator</p>
               </div>
             </>
           )}
           {sidebarMinimized && (
             <div className="flex justify-center">
-              <div className="bg-gradient-to-r from-purple-600 to-cyan-500 p-1.5 rounded-lg">
-                <BarChart3 className="w-5 h-5 text-white" />
+              <div className="bg-gradient-to-r from-purple-600 to-cyan-500 p-2 rounded-lg">
+                <BarChart3 className="w-6 h-6 text-white" />
               </div>
             </div>
           )}
         </div>
 
-        <nav className="flex-1 px-3 py-2 lg:p-4 space-y-1 lg:space-y-2">
+        <nav className="flex-1 p-4 space-y-2">
           <button
             onClick={() => setActiveTab('analytics')}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 rounded-lg transition-colors ${
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-3 rounded-lg transition-colors ${
               activeTab === 'analytics'
                 ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30'
                 : 'text-purple-300 hover:bg-slate-700'
             }`}
             title={sidebarMinimized ? 'Analytics' : ''}
           >
-            <BarChart3 className="w-5 h-5 flex-shrink-0" />
-            {!sidebarMinimized && <span className="text-sm lg:text-base truncate">Analytics</span>}
+            <BarChart3 className="w-5 h-5" />
+            {!sidebarMinimized && 'Analytics'}
           </button>
 
           <button
             onClick={() => setActiveTab('logs')}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 rounded-lg transition-colors ${
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-3 rounded-lg transition-colors ${
               activeTab === 'logs'
                 ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30'
                 : 'text-purple-300 hover:bg-slate-700'
             }`}
             title={sidebarMinimized ? 'Chat Logs' : ''}
           >
-            <MessageSquare className="w-5 h-5 flex-shrink-0" />
-            {!sidebarMinimized && <span className="text-sm lg:text-base truncate">Chat Logs</span>}
+            <MessageSquare className="w-5 h-5" />
+            {!sidebarMinimized && 'Chat Logs'}
           </button>
 
           <button
             onClick={() => setActiveTab('documents')}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 rounded-lg transition-colors ${
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-3 rounded-lg transition-colors ${
               activeTab === 'documents'
                 ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30'
                 : 'text-purple-300 hover:bg-slate-700'
             }`}
             title={sidebarMinimized ? 'Dokumen RAG' : ''}
           >
-            <FileText className="w-5 h-5 flex-shrink-0" />
-            {!sidebarMinimized && <span className="text-sm lg:text-base truncate">Dokumen</span>}
+            <FileText className="w-5 h-5" />
+            {!sidebarMinimized && 'Dokumen RAG'}
           </button>
 
           <button
             onClick={() => setActiveTab('training')}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 rounded-lg transition-colors ${
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-3 rounded-lg transition-colors ${
               activeTab === 'training'
                 ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30'
                 : 'text-purple-300 hover:bg-slate-700'
             }`}
             title={sidebarMinimized ? 'Training AI' : ''}
           >
-            <BookOpen className="w-5 h-5 flex-shrink-0" />
-            {!sidebarMinimized && <span className="text-sm lg:text-base truncate">Training</span>}
+            <BookOpen className="w-5 h-5" />
+            {!sidebarMinimized && 'Training AI'}
           </button>
 
           <button
             onClick={() => setActiveTab('unanswered')}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 rounded-lg transition-colors ${
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-3 rounded-lg transition-colors ${
               activeTab === 'unanswered'
                 ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30'
                 : 'text-purple-300 hover:bg-slate-700'
             }`}
-            title={sidebarMinimized ? 'Pertanyaan' : ''}
+            title={sidebarMinimized ? 'Pertanyaan Belum Terjawab' : ''}
           >
-            <HelpCircle className="w-5 h-5 flex-shrink-0" />
-            {!sidebarMinimized && <span className="text-sm lg:text-base truncate">Pertanyaan</span>}
+            <HelpCircle className="w-5 h-5" />
+            {!sidebarMinimized && 'Pertanyaan Belum Terjawab'}
           </button>
         </nav>
 
-        <div className="px-3 py-2 lg:p-4 border-t border-purple-500/20 space-y-1 lg:space-y-2">
+        <div className="p-4 border-t border-purple-500/20 space-y-2">
           <button
             onClick={() => setSidebarMinimized(!sidebarMinimized)}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 text-cyan-300 hover:bg-slate-700 rounded-lg transition-colors`}
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-3 text-cyan-300 hover:bg-slate-700 rounded-lg transition-colors`}
             title={sidebarMinimized ? 'Expand Sidebar' : 'Minimize Sidebar'}
           >
-            {sidebarMinimized ? <ChevronRight className="w-5 h-5 flex-shrink-0" /> : <ChevronLeft className="w-5 h-5 flex-shrink-0" />}
-            {!sidebarMinimized && <span className="text-sm lg:text-base">Minimize</span>}
+            {sidebarMinimized ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+            {!sidebarMinimized && 'Minimize'}
           </button>
           
           <button
             onClick={onLogout}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 text-purple-300 hover:bg-slate-700 rounded-lg transition-colors`}
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-3 text-purple-300 hover:bg-slate-700 rounded-lg transition-colors`}
             title={sidebarMinimized ? 'Keluar' : ''}
           >
-            <LogOut className="w-5 h-5 flex-shrink-0" />
-            {!sidebarMinimized && <span className="text-sm lg:text-base">Keluar</span>}
+            <LogOut className="w-5 h-5" />
+            {!sidebarMinimized && 'Keluar'}
           </button>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden">
-        <div className="p-3 sm:p-6 lg:p-8">
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-8">
           {activeTab === 'analytics' && (
             <div>
-              <h1 className="text-white text-lg sm:text-xl lg:text-2xl mb-4 sm:mb-6">Analytics & Statistik</h1>
+              <h1 className="text-white mb-6">Analytics & Statistik</h1>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
-                <div className="bg-slate-800 rounded-xl p-4 sm:p-6 border border-purple-500/20">
-                  <div className="flex items-center gap-3 sm:block">
-                    <div className="bg-blue-600/20 p-2 sm:p-3 rounded-lg border border-blue-500/30 sm:mb-4">
-                      <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
-                    </div>
-                    <div>
-                      <p className="text-purple-300 text-sm sm:text-base mb-0.5 sm:mb-1">Total Pegawai Aktif</p>
-                      <p className="text-white text-lg sm:text-xl font-semibold">{getUniqueUsers()}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div className="bg-slate-800 rounded-xl p-6 border border-purple-500/20">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="bg-blue-600/20 p-3 rounded-lg border border-blue-500/30">
+                      <Users className="w-6 h-6 text-blue-400" />
                     </div>
                   </div>
+                  <p className="text-purple-300 mb-1">Total Pegawai Aktif</p>
+                  <p className="text-white">{getUniqueUsers()}</p>
                 </div>
 
-                <div className="bg-slate-800 rounded-xl p-4 sm:p-6 border border-purple-500/20">
-                  <div className="flex items-center gap-3 sm:block">
-                    <div className="bg-green-600/20 p-2 sm:p-3 rounded-lg border border-green-500/30 sm:mb-4">
-                      <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 text-green-400" />
-                    </div>
-                    <div>
-                      <p className="text-purple-300 text-sm sm:text-base mb-0.5 sm:mb-1">Total Pertanyaan</p>
-                      <p className="text-white text-lg sm:text-xl font-semibold">{getTotalQuestions()}</p>
+                <div className="bg-slate-800 rounded-xl p-6 border border-purple-500/20">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="bg-green-600/20 p-3 rounded-lg border border-green-500/30">
+                      <MessageSquare className="w-6 h-6 text-green-400" />
                     </div>
                   </div>
+                  <p className="text-purple-300 mb-1">Total Pertanyaan</p>
+                  <p className="text-white">{getTotalQuestions()}</p>
                 </div>
 
-                <div className="bg-slate-800 rounded-xl p-4 sm:p-6 border border-purple-500/20">
-                  <div className="flex items-center gap-3 sm:block">
-                    <div className="bg-purple-600/20 p-2 sm:p-3 rounded-lg border border-purple-500/30 sm:mb-4">
-                      <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
-                    </div>
-                    <div>
-                      <p className="text-purple-300 text-sm sm:text-base mb-0.5 sm:mb-1">Rata-rata per Pegawai</p>
-                      <p className="text-white text-lg sm:text-xl font-semibold">{getAverageQuestionsPerUser()}</p>
+                <div className="bg-slate-800 rounded-xl p-6 border border-purple-500/20">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="bg-purple-600/20 p-3 rounded-lg border border-purple-500/30">
+                      <BarChart3 className="w-6 h-6 text-purple-400" />
                     </div>
                   </div>
+                  <p className="text-purple-300 mb-1">Rata-rata per Pegawai</p>
+                  <p className="text-white">{getAverageQuestionsPerUser()}</p>
                 </div>
               </div>
 
