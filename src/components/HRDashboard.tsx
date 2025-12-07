@@ -329,7 +329,7 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
             <div>
               <h1 className="text-white mb-6">Analytics & Statistik</h1>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="stats-grid mb-8">
                 <div className="bg-slate-800 rounded-xl p-6 border border-purple-500/20">
                   <div className="flex items-center justify-between mb-4">
                     <div className="bg-blue-600/20 p-3 rounded-lg border border-blue-500/30">

@@ -189,3 +189,16 @@
 html {
   font-size: var(--font-size);
 }
+
+/* Custom responsive grid for analytics cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
