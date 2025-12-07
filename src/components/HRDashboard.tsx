@@ -218,7 +218,7 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
   return (
     <div className="flex h-screen w-full bg-slate-900 overflow-x-hidden">
       {/* Sidebar - always visible, minimized on mobile by default */}
-      <div className={`${sidebarMinimized ? 'w-14 sm:w-16' : 'w-44 sm:w-52 lg:w-64'} flex bg-slate-800 border-r border-purple-500/20 flex-col transition-all duration-300 flex-shrink-0`}>
+      <div className={`${sidebarMinimized ? 'w-12 sm:w-16' : 'w-40 sm:w-52 lg:w-64'} flex bg-slate-800 border-r border-purple-500/20 flex-col transition-all duration-300 flex-shrink-0`}>
         <div className="p-4 lg:p-6 border-b border-purple-500/20">
           {!sidebarMinimized && (
             <>
@@ -338,37 +338,43 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
         <div className="p-3 sm:p-6 lg:p-8">
           {activeTab === 'analytics' && (
             <div>
-              <h1 className="text-white mb-6">Analytics & Statistik</h1>
+              <h1 className="text-white text-lg sm:text-xl lg:text-2xl mb-4 sm:mb-6">Analytics & Statistik</h1>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
-                <div className="bg-slate-800 rounded-xl p-6 border border-purple-500/20">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="bg-blue-600/20 p-3 rounded-lg border border-blue-500/30">
-                      <Users className="w-6 h-6 text-blue-400" />
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+                <div className="bg-slate-800 rounded-xl p-4 sm:p-6 border border-purple-500/20">
+                  <div className="flex items-center gap-3 sm:block">
+                    <div className="bg-blue-600/20 p-2 sm:p-3 rounded-lg border border-blue-500/30 sm:mb-4">
+                      <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-purple-300 text-sm sm:text-base mb-0.5 sm:mb-1">Total Pegawai Aktif</p>
+                      <p className="text-white text-lg sm:text-xl font-semibold">{getUniqueUsers()}</p>
                     </div>
                   </div>
-                  <p className="text-purple-300 mb-1">Total Pegawai Aktif</p>
-                  <p className="text-white">{getUniqueUsers()}</p>
                 </div>
 
-                <div className="bg-slate-800 rounded-xl p-6 border border-purple-500/20">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="bg-green-600/20 p-3 rounded-lg border border-green-500/30">
-                      <MessageSquare className="w-6 h-6 text-green-400" />
+                <div className="bg-slate-800 rounded-xl p-4 sm:p-6 border border-purple-500/20">
+                  <div className="flex items-center gap-3 sm:block">
+                    <div className="bg-green-600/20 p-2 sm:p-3 rounded-lg border border-green-500/30 sm:mb-4">
+                      <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 text-green-400" />
+                    </div>
+                    <div>
+                      <p className="text-purple-300 text-sm sm:text-base mb-0.5 sm:mb-1">Total Pertanyaan</p>
+                      <p className="text-white text-lg sm:text-xl font-semibold">{getTotalQuestions()}</p>
                     </div>
                   </div>
-                  <p className="text-purple-300 mb-1">Total Pertanyaan</p>
-                  <p className="text-white">{getTotalQuestions()}</p>
                 </div>
 
-                <div className="bg-slate-800 rounded-xl p-6 border border-purple-500/20">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="bg-purple-600/20 p-3 rounded-lg border border-purple-500/30">
-                      <BarChart3 className="w-6 h-6 text-purple-400" />
+                <div className="bg-slate-800 rounded-xl p-4 sm:p-6 border border-purple-500/20">
+                  <div className="flex items-center gap-3 sm:block">
+                    <div className="bg-purple-600/20 p-2 sm:p-3 rounded-lg border border-purple-500/30 sm:mb-4">
+                      <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+                    </div>
+                    <div>
+                      <p className="text-purple-300 text-sm sm:text-base mb-0.5 sm:mb-1">Rata-rata per Pegawai</p>
+                      <p className="text-white text-lg sm:text-xl font-semibold">{getAverageQuestionsPerUser()}</p>
                     </div>
                   </div>
-                  <p className="text-purple-300 mb-1">Rata-rata per Pegawai</p>
-                  <p className="text-white">{getAverageQuestionsPerUser()}</p>
                 </div>
               </div>
 
