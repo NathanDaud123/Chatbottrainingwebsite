@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, MessageSquare, BookOpen, FileText, LogOut, Plus, X, Trash2, ChevronLeft, ChevronRight, Users, Upload } from 'lucide-react';
+import { BarChart3, MessageSquare, BookOpen, FileText, LogOut, Plus, X, Trash2, ChevronLeft, ChevronRight, Users, Upload, HelpCircle, Check, History } from 'lucide-react';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { UnansweredQuestionsTab } from './UnansweredQuestionsTab';
+import { DocumentUploadModal } from './DocumentUploadModal';
+import { ChatLogsTab } from './ChatLogsTab';
 
 interface HRDashboardProps {
   user: User;
   onLogout: () => void;
 }
 
-type TabType = 'analytics' | 'logs' | 'documents' | 'training';
+type TabType = 'analytics' | 'logs' | 'documents' | 'training' | 'unanswered' | 'chat-histories';
 
 export function HRDashboard({ user, onLogout }: HRDashboardProps) {
   const [activeTab, setActiveTab] = useState<TabType>('analytics');
@@ -19,6 +22,8 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
   const [newAnswer, setNewAnswer] = useState('');
   const [loading, setLoading] = useState(false);
   const [sidebarMinimized, setSidebarMinimized] = useState(false);
+  const [documentContent, setDocumentContent] = useState('');
+  const [showDocumentModal, setShowDocumentModal] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -281,6 +286,19 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
             <BookOpen className="w-5 h-5" />
             {!sidebarMinimized && 'Training AI'}
           </button>
+
+          <button
+            onClick={() => setActiveTab('unanswered')}
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-3 rounded-lg transition-colors ${
+              activeTab === 'unanswered'
+                ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30'
+                : 'text-purple-300 hover:bg-slate-700'
+            }`}
+            title={sidebarMinimized ? 'Pertanyaan Belum Terjawab' : ''}
+          >
+            <HelpCircle className="w-5 h-5" />
+            {!sidebarMinimized && 'Pertanyaan Belum Terjawab'}
+          </button>
         </nav>
 
         <div className="p-4 border-t border-purple-500/20 space-y-2">
@@ -371,43 +389,7 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
           )}
 
           {activeTab === 'logs' && (
-            <div>
-              <h1 className="text-white mb-6">Chat Logs</h1>
-              
-              <div className="bg-slate-800 rounded-xl border border-purple-500/20 overflow-hidden">
-                {chatLogs.length === 0 ? (
-                  <div className="text-center py-12">
-                    <MessageSquare className="w-12 h-12 text-purple-400 mx-auto mb-4" />
-                    <p className="text-purple-300">Belum ada chat logs</p>
-                  </div>
-                ) : (
-                  <div className="divide-y divide-purple-500/20">
-                    {chatLogs.filter(log => log).map((log) => (
-                      <div key={log.id} className="p-6 hover:bg-slate-700/50">
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <p className="text-white">{log.userName}</p>
-                            <p className="text-purple-400">
-                              {new Date(log.timestamp).toLocaleString('id-ID')}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="bg-slate-700 rounded-lg p-3 border border-purple-500/20">
-                            <p className="text-purple-300 mb-1">Pertanyaan:</p>
-                            <p className="text-white">{log.message}</p>
-                          </div>
-                          <div className="bg-gradient-to-r from-purple-900/30 to-cyan-900/30 rounded-lg p-3 border border-cyan-500/20">
-                            <p className="text-cyan-300 mb-1">Jawaban Bot:</p>
-                            <p className="text-white">{log.response}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
+            <ChatLogsTab accessToken={user.accessToken} />
           )}
 
           {activeTab === 'documents' && (
@@ -419,18 +401,21 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
                 <p className="text-purple-300 mb-4">
                   Upload dokumen SOP, panduan, atau file lainnya untuk meningkatkan pengetahuan chatbot (RAG).
                 </p>
-                <label className="flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-purple-900/50 to-cyan-900/50 border-2 border-dashed border-purple-500 rounded-lg cursor-pointer hover:from-purple-900/70 hover:to-cyan-900/70 transition-all">
-                  <Upload className="w-6 h-6 text-cyan-400" />
-                  <span className="text-purple-200">Pilih file untuk diupload</span>
-                  <input
-                    type="file"
-                    multiple
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    accept=".pdf,.doc,.docx,.txt"
-                  />
-                </label>
+                <button
+                  onClick={() => setShowDocumentModal(true)}
+                  className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-purple-900/50 to-cyan-900/50 border-2 border-dashed border-purple-500 rounded-lg hover:from-purple-900/70 hover:to-cyan-900/70 transition-all"
+                >
+                  <Plus className="w-6 h-6 text-cyan-400" />
+                  <span className="text-purple-200">Tambah Dokumen Baru</span>
+                </button>
               </div>
+
+              <DocumentUploadModal
+                isOpen={showDocumentModal}
+                onClose={() => setShowDocumentModal(false)}
+                onSuccess={(doc) => setDocuments([...documents, doc])}
+                accessToken={user.accessToken}
+              />
 
               <div className="bg-slate-800 rounded-xl border border-purple-500/20 overflow-hidden">
                 <div className="p-6 border-b border-purple-500/20">
@@ -570,6 +555,10 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
                 )}
               </div>
             </div>
+          )}
+
+          {activeTab === 'unanswered' && (
+            <UnansweredQuestionsTab accessToken={user.accessToken} />
           )}
         </div>
       </div>

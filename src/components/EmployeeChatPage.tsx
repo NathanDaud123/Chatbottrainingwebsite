@@ -2,30 +2,66 @@ import { useState, useEffect, useRef } from 'react';
 import { User, TrainingQA } from '../App';
 import { Send, LogOut, MessageSquare } from 'lucide-react';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { MarkdownText } from './MarkdownText';
 
 interface EmployeeChatPageProps {
   user: User;
   onLogout: () => void;
 }
 
+interface ChatMessage {
+  role: 'user' | 'bot';
+  text: string;
+  timestamp: number;
+  sources?: string;
+}
+
 export function EmployeeChatPage({ user, onLogout }: EmployeeChatPageProps) {
-  const [messages, setMessages] = useState<Array<{ role: 'user' | 'bot'; text: string; timestamp: number }>>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [trainingData, setTrainingData] = useState<TrainingQA[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Load chat history for this user from localStorage
-    const chatHistory = JSON.parse(localStorage.getItem(`chat_${user.id}`) || '[]');
-    setMessages(chatHistory);
+    // Load chat history from server (database)
+    loadChatHistory();
     
     // Fetch training data from server
     fetchTrainingData();
   }, [user.id]);
 
+  const loadChatHistory = async () => {
+    try {
+      const response = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/make-server-a177d153/chat-history/${user.id}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${user.accessToken}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        // Convert database format to component format
+        const chatMessages: ChatMessage[] = data.history.map((msg: any) => ({
+          role: msg.role,
+          text: msg.text,
+          timestamp: msg.timestamp,
+          sources: msg.sources,
+        }));
+        setMessages(chatMessages);
+        console.log(`Loaded ${chatMessages.length} messages from database`);
+      }
+    } catch (error) {
+      console.log('Error loading chat history:', error);
+    }
+  };
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, isLoading]);
 
   const fetchTrainingData = async () => {
     try {
@@ -82,40 +118,69 @@ export function EmployeeChatPage({ user, onLogout }: EmployeeChatPageProps) {
       timestamp: Date.now(),
     };
 
-    const botResponse = findBestAnswer(input);
-    const botMessage = {
-      role: 'bot' as const,
-      text: botResponse,
-      timestamp: Date.now() + 1,
-    };
+    // Add user message immediately
+    setMessages(prev => [...prev, userMessage]);
+    const currentInput = input;
+    setInput('');
+    setIsLoading(true);
 
-    const newMessages = [...messages, userMessage, botMessage];
-    setMessages(newMessages);
-
-    // Save to localStorage
-    localStorage.setItem(`chat_${user.id}`, JSON.stringify(newMessages));
-
-    // Save to server
+    // Call server chat endpoint with RAG
     try {
-      await fetch(
-        `https://${projectId}.supabase.co/functions/v1/make-server-a177d153/chat-logs`,
+      const response = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/make-server-a177d153/chat`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${user.accessToken}`,
+            Authorization: `Bearer ${user.accessToken}`,
           },
-          body: JSON.stringify({
-            message: input,
-            response: botResponse,
-          }),
+          body: JSON.stringify({ message: currentInput }),
         }
       );
-    } catch (error) {
-      console.log('Error saving chat log:', error);
-    }
 
-    setInput('');
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Server error response:', data);
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      const botMessage: ChatMessage = {
+        role: 'bot',
+        text: data.response,
+        timestamp: Date.now(),
+        sources: data.sources,
+      };
+
+      setMessages((prev) => [...prev, botMessage]);
+      
+      // Check if AI couldn't answer - save as unanswered question
+      if (data.response.includes('tidak memiliki informasi') || 
+          data.response.includes('hubungi HR')) {
+        await fetch(
+          `https://${projectId}.supabase.co/functions/v1/make-server-a177d153/unanswered-questions`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${user.accessToken}`,
+            },
+            body: JSON.stringify({ question: currentInput }),
+          }
+        );
+        console.log('Saved unanswered question for HR review');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      const errorMessage: ChatMessage = {
+        role: 'bot',
+        text: 'Maaf, terjadi kesalahan saat memproses pertanyaan Anda. Silakan coba lagi atau hubungi HR.',
+        timestamp: Date.now(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -179,7 +244,12 @@ export function EmployeeChatPage({ user, onLogout }: EmployeeChatPageProps) {
                   : 'bg-slate-800 border border-purple-500/20 text-white'
               }`}
             >
-              <p className="whitespace-pre-wrap">{msg.text}</p>
+              <MarkdownText text={msg.text} />
+              {msg.sources && (
+                <p className="text-xs mt-2 text-cyan-300 italic border-t border-cyan-500/20 pt-2">
+                  {msg.sources}
+                </p>
+              )}
               <p
                 className={`text-xs mt-1 ${
                   msg.role === 'user' ? 'text-purple-200' : 'text-purple-400'
@@ -193,6 +263,20 @@ export function EmployeeChatPage({ user, onLogout }: EmployeeChatPageProps) {
             </div>
           </div>
         ))}
+
+        {/* Loading Animation */}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="bg-slate-800 border border-purple-500/20 rounded-2xl px-4 py-3">
+              <div className="flex gap-1.5">
+                <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+              </div>
+            </div>
+          </div>
+        )}
+        
         <div ref={messagesEndRef} />
       </div>
 
@@ -209,7 +293,7 @@ export function EmployeeChatPage({ user, onLogout }: EmployeeChatPageProps) {
           />
           <button
             onClick={handleSend}
-            disabled={!input.trim()}
+            disabled={!input.trim() || isLoading}
             className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white px-6 py-3 rounded-xl hover:from-purple-700 hover:to-cyan-600 disabled:from-slate-600 disabled:to-slate-600 disabled:cursor-not-allowed transition-all flex items-center gap-2 shadow-lg shadow-purple-500/30"
           >
             <Send className="w-5 h-5" />
