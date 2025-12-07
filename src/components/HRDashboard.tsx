@@ -245,89 +245,89 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
           )}
         </div>
 
-        <nav className="flex-1 p-2 lg:p-4 space-y-1 lg:space-y-2">
+        <nav className="flex-1 px-3 py-2 lg:p-4 space-y-1 lg:space-y-2">
           <button
             onClick={() => setActiveTab('analytics')}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-2 lg:gap-3'} px-3 py-2 lg:px-4 lg:py-3 rounded-lg transition-colors ${
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 rounded-lg transition-colors ${
               activeTab === 'analytics'
                 ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30'
                 : 'text-purple-300 hover:bg-slate-700'
             }`}
             title={sidebarMinimized ? 'Analytics' : ''}
           >
-            <BarChart3 className="w-4 h-4 lg:w-5 lg:h-5" />
+            <BarChart3 className="w-5 h-5 flex-shrink-0" />
             {!sidebarMinimized && <span className="text-sm lg:text-base truncate">Analytics</span>}
           </button>
 
           <button
             onClick={() => setActiveTab('logs')}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-2 lg:gap-3'} px-3 py-2 lg:px-4 lg:py-3 rounded-lg transition-colors ${
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 rounded-lg transition-colors ${
               activeTab === 'logs'
                 ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30'
                 : 'text-purple-300 hover:bg-slate-700'
             }`}
             title={sidebarMinimized ? 'Chat Logs' : ''}
           >
-            <MessageSquare className="w-4 h-4 lg:w-5 lg:h-5" />
+            <MessageSquare className="w-5 h-5 flex-shrink-0" />
             {!sidebarMinimized && <span className="text-sm lg:text-base truncate">Chat Logs</span>}
           </button>
 
           <button
             onClick={() => setActiveTab('documents')}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-2 lg:gap-3'} px-3 py-2 lg:px-4 lg:py-3 rounded-lg transition-colors ${
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 rounded-lg transition-colors ${
               activeTab === 'documents'
                 ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30'
                 : 'text-purple-300 hover:bg-slate-700'
             }`}
             title={sidebarMinimized ? 'Dokumen RAG' : ''}
           >
-            <FileText className="w-4 h-4 lg:w-5 lg:h-5" />
+            <FileText className="w-5 h-5 flex-shrink-0" />
             {!sidebarMinimized && <span className="text-sm lg:text-base truncate">Dokumen</span>}
           </button>
 
           <button
             onClick={() => setActiveTab('training')}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-2 lg:gap-3'} px-3 py-2 lg:px-4 lg:py-3 rounded-lg transition-colors ${
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 rounded-lg transition-colors ${
               activeTab === 'training'
                 ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30'
                 : 'text-purple-300 hover:bg-slate-700'
             }`}
             title={sidebarMinimized ? 'Training AI' : ''}
           >
-            <BookOpen className="w-4 h-4 lg:w-5 lg:h-5" />
+            <BookOpen className="w-5 h-5 flex-shrink-0" />
             {!sidebarMinimized && <span className="text-sm lg:text-base truncate">Training</span>}
           </button>
 
           <button
             onClick={() => setActiveTab('unanswered')}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-2 lg:gap-3'} px-3 py-2 lg:px-4 lg:py-3 rounded-lg transition-colors ${
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 rounded-lg transition-colors ${
               activeTab === 'unanswered'
                 ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-lg shadow-purple-500/30'
                 : 'text-purple-300 hover:bg-slate-700'
             }`}
             title={sidebarMinimized ? 'Pertanyaan' : ''}
           >
-            <HelpCircle className="w-4 h-4 lg:w-5 lg:h-5" />
+            <HelpCircle className="w-5 h-5 flex-shrink-0" />
             {!sidebarMinimized && <span className="text-sm lg:text-base truncate">Pertanyaan</span>}
           </button>
         </nav>
 
-        <div className="p-2 lg:p-4 border-t border-purple-500/20 space-y-1 lg:space-y-2">
+        <div className="px-3 py-2 lg:p-4 border-t border-purple-500/20 space-y-1 lg:space-y-2">
           <button
             onClick={() => setSidebarMinimized(!sidebarMinimized)}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-2 lg:gap-3'} px-3 py-2 lg:px-4 lg:py-3 text-cyan-300 hover:bg-slate-700 rounded-lg transition-colors`}
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 text-cyan-300 hover:bg-slate-700 rounded-lg transition-colors`}
             title={sidebarMinimized ? 'Expand Sidebar' : 'Minimize Sidebar'}
           >
-            {sidebarMinimized ? <ChevronRight className="w-4 h-4 lg:w-5 lg:h-5" /> : <ChevronLeft className="w-4 h-4 lg:w-5 lg:h-5" />}
+            {sidebarMinimized ? <ChevronRight className="w-5 h-5 flex-shrink-0" /> : <ChevronLeft className="w-5 h-5 flex-shrink-0" />}
             {!sidebarMinimized && <span className="text-sm lg:text-base">Minimize</span>}
           </button>
           
           <button
             onClick={onLogout}
-            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-2 lg:gap-3'} px-3 py-2 lg:px-4 lg:py-3 text-purple-300 hover:bg-slate-700 rounded-lg transition-colors`}
+            className={`w-full flex items-center ${sidebarMinimized ? 'justify-center' : 'gap-3'} px-4 py-2.5 lg:px-4 lg:py-3 text-purple-300 hover:bg-slate-700 rounded-lg transition-colors`}
             title={sidebarMinimized ? 'Keluar' : ''}
           >
-            <LogOut className="w-4 h-4 lg:w-5 lg:h-5" />
+            <LogOut className="w-5 h-5 flex-shrink-0" />
             {!sidebarMinimized && <span className="text-sm lg:text-base">Keluar</span>}
           </button>
         </div>
