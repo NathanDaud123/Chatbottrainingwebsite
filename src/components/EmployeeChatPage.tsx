@@ -210,9 +210,9 @@ export function EmployeeChatPage({ user, onLogout }: EmployeeChatPageProps) {
           </div>
           <button
             onClick={onLogout}
-            className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors text-white border border-purple-500/20 text-sm"
+            className="flex items-center gap-2 px-4 py-2.5 sm:px-4 sm:py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors text-white border border-purple-500/20 text-sm"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-5 h-5 sm:w-4 sm:h-4" />
             <span className="hidden sm:inline">Keluar</span>
           </button>
         </div>
