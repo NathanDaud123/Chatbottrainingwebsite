@@ -4,6 +4,7 @@
   import path from 'path';
 
   export default defineConfig({
+    base: process.env.GITHUB_PAGES ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/` : '/',
     plugins: [react()],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
@@ -54,7 +55,7 @@
     },
     build: {
       target: 'esnext',
-      outDir: 'build',
+      outDir: 'dist',
     },
     server: {
       port: 3000,
