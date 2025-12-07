@@ -21,9 +21,20 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
   const [newQuestion, setNewQuestion] = useState('');
   const [newAnswer, setNewAnswer] = useState('');
   const [loading, setLoading] = useState(false);
-  const [sidebarMinimized, setSidebarMinimized] = useState(false);
+  const [sidebarMinimized, setSidebarMinimized] = useState(window.innerWidth < 640);
   const [documentContent, setDocumentContent] = useState('');
   const [showDocumentModal, setShowDocumentModal] = useState(false);
+
+  // Auto-minimize sidebar on mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setSidebarMinimized(true);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     loadData();
@@ -206,8 +217,8 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
 
   return (
     <div className="flex h-screen w-full bg-slate-900 overflow-x-hidden">
-      {/* Sidebar - hidden on mobile, icon-only on tablet, full on desktop */}
-      <div className={`${sidebarMinimized ? 'w-16' : 'w-52 lg:w-64'} hidden sm:flex bg-slate-800 border-r border-purple-500/20 flex-col transition-all duration-300 flex-shrink-0`}>
+      {/* Sidebar - always visible, minimized on mobile by default */}
+      <div className={`${sidebarMinimized ? 'w-14 sm:w-16' : 'w-44 sm:w-52 lg:w-64'} flex bg-slate-800 border-r border-purple-500/20 flex-col transition-all duration-300 flex-shrink-0`}>
         <div className="p-4 lg:p-6 border-b border-purple-500/20">
           {!sidebarMinimized && (
             <>
@@ -323,85 +334,8 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
-        {/* Mobile Header - only visible on mobile */}
-        <div className="sm:hidden bg-slate-800 border-b border-purple-500/20 px-4 py-4 flex items-center justify-between flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="bg-gradient-to-r from-purple-600 to-cyan-500 p-2 rounded-lg">
-              <BarChart3 className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-white text-base font-semibold">HR Dashboard</span>
-          </div>
-          <button
-            onClick={onLogout}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-white text-sm border border-purple-500/20"
-          >
-            <LogOut className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Mobile Navigation Tabs */}
-        <div className="sm:hidden bg-slate-800 border-b border-purple-500/20 px-3 py-3 overflow-x-auto flex-shrink-0">
-          <div className="flex gap-2 min-w-max">
-            <button
-              onClick={() => setActiveTab('analytics')}
-              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm whitespace-nowrap ${
-                activeTab === 'analytics'
-                  ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white'
-                  : 'text-purple-300 bg-slate-700'
-              }`}
-            >
-              <BarChart3 className="w-4 h-4" />
-              Analytics
-            </button>
-            <button
-              onClick={() => setActiveTab('logs')}
-              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm whitespace-nowrap ${
-                activeTab === 'logs'
-                  ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white'
-                  : 'text-purple-300 bg-slate-700'
-              }`}
-            >
-              <MessageSquare className="w-4 h-4" />
-              Logs
-            </button>
-            <button
-              onClick={() => setActiveTab('documents')}
-              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm whitespace-nowrap ${
-                activeTab === 'documents'
-                  ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white'
-                  : 'text-purple-300 bg-slate-700'
-              }`}
-            >
-              <FileText className="w-4 h-4" />
-              Dokumen
-            </button>
-            <button
-              onClick={() => setActiveTab('training')}
-              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm whitespace-nowrap ${
-                activeTab === 'training'
-                  ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white'
-                  : 'text-purple-300 bg-slate-700'
-              }`}
-            >
-              <BookOpen className="w-4 h-4" />
-              Training
-            </button>
-            <button
-              onClick={() => setActiveTab('unanswered')}
-              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm whitespace-nowrap ${
-                activeTab === 'unanswered'
-                  ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white'
-                  : 'text-purple-300 bg-slate-700'
-              }`}
-            >
-              <HelpCircle className="w-4 h-4" />
-              Pertanyaan
-            </button>
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden">
+        <div className="p-3 sm:p-6 lg:p-8">
           {activeTab === 'analytics' && (
             <div>
               <h1 className="text-white mb-6">Analytics & Statistik</h1>
