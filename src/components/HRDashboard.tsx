@@ -325,77 +325,77 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
         {/* Mobile Header - only visible on mobile */}
-        <div className="sm:hidden bg-slate-800 border-b border-purple-500/20 p-3 flex items-center justify-between flex-shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="bg-gradient-to-r from-purple-600 to-cyan-500 p-1.5 rounded-lg">
-              <BarChart3 className="w-4 h-4 text-white" />
+        <div className="sm:hidden bg-slate-800 border-b border-purple-500/20 px-4 py-4 flex items-center justify-between flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-r from-purple-600 to-cyan-500 p-2 rounded-lg">
+              <BarChart3 className="w-5 h-5 text-white" />
             </div>
-            <span className="text-white text-sm font-medium">HR Dashboard</span>
+            <span className="text-white text-base font-semibold">HR Dashboard</span>
           </div>
           <button
             onClick={onLogout}
-            className="flex items-center gap-1 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded-lg text-white text-sm border border-purple-500/20"
+            className="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-white text-sm border border-purple-500/20"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-5 h-5" />
           </button>
         </div>
 
         {/* Mobile Navigation Tabs */}
-        <div className="sm:hidden bg-slate-800 border-b border-purple-500/20 p-2 overflow-x-auto flex-shrink-0">
-          <div className="flex gap-1 min-w-max">
+        <div className="sm:hidden bg-slate-800 border-b border-purple-500/20 px-3 py-3 overflow-x-auto flex-shrink-0">
+          <div className="flex gap-2 min-w-max">
             <button
               onClick={() => setActiveTab('analytics')}
-              className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm whitespace-nowrap ${
                 activeTab === 'analytics'
                   ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white'
                   : 'text-purple-300 bg-slate-700'
               }`}
             >
-              <BarChart3 className="w-3 h-3" />
+              <BarChart3 className="w-4 h-4" />
               Analytics
             </button>
             <button
               onClick={() => setActiveTab('logs')}
-              className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm whitespace-nowrap ${
                 activeTab === 'logs'
                   ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white'
                   : 'text-purple-300 bg-slate-700'
               }`}
             >
-              <MessageSquare className="w-3 h-3" />
+              <MessageSquare className="w-4 h-4" />
               Logs
             </button>
             <button
               onClick={() => setActiveTab('documents')}
-              className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm whitespace-nowrap ${
                 activeTab === 'documents'
                   ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white'
                   : 'text-purple-300 bg-slate-700'
               }`}
             >
-              <FileText className="w-3 h-3" />
+              <FileText className="w-4 h-4" />
               Dokumen
             </button>
             <button
               onClick={() => setActiveTab('training')}
-              className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm whitespace-nowrap ${
                 activeTab === 'training'
                   ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white'
                   : 'text-purple-300 bg-slate-700'
               }`}
             >
-              <BookOpen className="w-3 h-3" />
+              <BookOpen className="w-4 h-4" />
               Training
             </button>
             <button
               onClick={() => setActiveTab('unanswered')}
-              className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm whitespace-nowrap ${
                 activeTab === 'unanswered'
                   ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white'
                   : 'text-purple-300 bg-slate-700'
               }`}
             >
-              <HelpCircle className="w-3 h-3" />
+              <HelpCircle className="w-4 h-4" />
               Pertanyaan
             </button>
           </div>
