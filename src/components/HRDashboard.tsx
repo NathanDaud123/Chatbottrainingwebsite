@@ -638,7 +638,6 @@ export function HRDashboard({ user, onLogout }: HRDashboardProps) {
             <UnansweredQuestionsTab accessToken={user.accessToken} />
           )}
         </div>
-        </div>
       </div>
     </div>
   );
